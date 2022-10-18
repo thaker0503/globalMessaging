@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <%- include ('./partials/head.ejs') %> 
+</head>
+<body>
+   <nav>
+      <%- include ('./partials/navbar.ejs', {user:{name:"testUser"}}) %> 
+   </nav>
+   <main>
+      <%- include ('./login.ejs') %> 
+   </main>
+</body>
+</html>
