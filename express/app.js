@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const { v4: uuid } = require('uuid');
+// const { v4: uuid } = require('uuid');
+const bodyParser = require('body-parser');
 const { initializeApp } = require("firebase/app");
-const { getDatabase, ref, set } = require("firebase/database");
+// const { getAnalytics } = require("firebase/analytics");
+const { getDatabase, ref, set, get, child } = require("firebase/database");
 
 const app = express();
 
@@ -19,33 +21,60 @@ const firebaseConfig = {
 };
 
 const app1 = initializeApp(firebaseConfig);
+// const analytics = getAnalytics(app1)
 // const database = getDatabase(app1);
-console.log(app1);
+// console.log(app1);
 // console.log(database);
+const db = getDatabase();
 
-function writeUserData(userId, name, email, password) {
-    const db = getDatabase();
-    set(ref(db, 'users/' + userId), {
+function writeUserData(name, email, password) {
+    set(ref(db, 'users/' + name), {
         name,
         email,
         password
     })
 }
 
-// writeUserData(uuid(), 'yatharth', 'yatharth.thaker@technostacks.com', '123')
 
 app.use(express.json());
 app.set('view engine', 'ejs');
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 router.get('/', (req, res) => {
     res.render(path.join(__dirname + '/views/index'))
 });
 
+
+
+router.post('/login', (req, res) => {
+    let tmp = req.body.email.split('@')[0];
+    let fname = tmp.split('.')[0]
+    let lname = tmp.split('.')[1]
+    let userDetails = {
+        name: fname.charAt(0).toUpperCase()+fname.slice(1) + "-" + lname.charAt(0).toUpperCase()+lname.slice(1),
+        email: req.body.email,
+        password: req.body.password
+    }
+    // console.log(userDetails)
+    // writeUserData(userDetails.name, userDetails.email, userDetails.password);
+    // checkUser(userDetails.name)
+    get(child(ref(db), `users/${userDetails.name}`)).then((snapshot) => {
+        if (snapshot.exists()) {
+            console.log(snapshot.val());
+            res.status(200).send({msg: snapshot.val()});
+        } else {
+            console.log("No data avaialable");
+            res.send({msg: "No data avaialable"});
+        }
+    }).catch((error) => {
+        console.error(error);
+    });
+    // res.send({ message: "Success" });
+});
+
+
 app.use('/', router);
 
-// app.listen(port, () => {
-//     console.log(`App running on http://localhost:${port}`);
-// });
 
 module.exports = app;

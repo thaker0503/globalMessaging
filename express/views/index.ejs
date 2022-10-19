@@ -3,12 +3,14 @@
 <head>
    <%- include ('./partials/head.ejs') %> 
 </head>
-<body>
+<body style="background-color: #d5d9e2;">
    <nav>
       <%- include ('./partials/navbar.ejs', {user:{name:"testUser"}}) %> 
    </nav>
    <main>
-      <%- include ('./login.ejs') %> 
+      <%- include ('./partials/login.ejs') %>
+
    </main>
+
 </body>
 </html>
