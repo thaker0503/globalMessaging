@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Chat | Technostacks</title>
+</head>
+<body>
+    <main class="main-chat-screen">
+        <span>
+            <b>UserName:</b><br>&nbsp;&nbsp;&nbsp;&nbsp;<span>user message</span>
+        </span>
+    </main>
+    <section>
+        <form id="chatForm">
+            <input type="text" name="chatInput" id="chatInput" class="chat-input" />
+            <input type="submit"></input>
+        </form>
+    </section>
+
+    <script>
+        const chatForm = document.getElementById('chatForm');
+
+        chatForm.addEventListener('submit', (e)=>{
+            e.preventDefault();
+            
+        })
+    </script>
+</body>
+</html>

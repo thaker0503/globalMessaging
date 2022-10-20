@@ -3,6 +3,7 @@ const router = express.Router();
 const path = require('path');
 // const { v4: uuid } = require('uuid');
 const bodyParser = require('body-parser');
+const bcrypt = require("bcrypt")
 const { initializeApp } = require("firebase/app");
 // const { getAnalytics } = require("firebase/analytics");
 const { getDatabase, ref, set, get, child } = require("firebase/database");
@@ -27,12 +28,15 @@ const app1 = initializeApp(firebaseConfig);
 // console.log(database);
 const db = getDatabase();
 
-function writeUserData(name, email, password) {
+async function writeUserData(name, email, password) {
+    const encPassword = await encrypt(password)
     set(ref(db, 'users/' + name), {
         name,
         email,
-        password
+        encPassword
     })
+    
+    
 }
 
 
@@ -61,8 +65,15 @@ router.post('/login', (req, res) => {
     // checkUser(userDetails.name)
     get(child(ref(db), `users/${userDetails.name}`)).then((snapshot) => {
         if (snapshot.exists()) {
-            console.log(snapshot.val());
-            res.status(200).send({msg: snapshot.val()});
+            console.log(snapshot.val().encPassword);
+            compare(userDetails.password, snapshot.val().encPassword)
+                .then(result => {
+                    if (result) {
+                        res.status(200).json({msg: snapshot.val()});
+                    } else {
+                        res.status(204).json({msg: "Credentials don't match"})
+                    }
+                })
         } else {
             console.log("No data avaialable");
             res.send({msg: "No data avaialable"});
@@ -70,9 +81,20 @@ router.post('/login', (req, res) => {
     }).catch((error) => {
         console.error(error);
     });
-    // res.send({ message: "Success" });
+    // res.send({ message: "Login Success" });
 });
 
+function encrypt(plaintextPassword) {
+    return bcrypt.hash(plaintextPassword, 10)
+}
+
+function compare(plaintextPassword,hash) {
+    return bcrypt.compare(plaintextPassword, hash)
+}
+
+router.post('/chat', (req, res) => {
+    
+})
 
 app.use('/', router);
 
