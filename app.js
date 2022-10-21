@@ -46,7 +46,7 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: false }));
 
 router.get('/', (req, res) => {
-    res.render(path.join(__dirname + '/views/index'))
+    res.render('index',{page:'login.ejs',user:'Please Login'})
 });
 
 
@@ -69,7 +69,8 @@ router.post('/login', (req, res) => {
             compare(userDetails.password, snapshot.val().encPassword)
                 .then(result => {
                     if (result) {
-                        res.render('chat.html');
+                        console.log('Rendering Page')
+                        res.render('index',{page:'chat.ejs',user: snapshot.val().name});
                     } else {
                         res.status(204).json({msg: "Credentials don't match"})
                     }
@@ -95,10 +96,10 @@ function compare(plaintextPassword,hash) {
 router.post('/chats', (req, res) => {
     console.log(req.body)
     res.send(req.body)
-    // db.ref("messages/" + req.body.timestamp).set({
-    //     username: req.body.username,
-    //     message: req.body.chatMsg,
-    // });
+    set(child(ref(db), `messages/${req, body.timestamp}`)).then((snapshot) => {
+        console.log(snapshot)
+        res.send({msg:"Data posted..."})
+    });
 })
 
 app.use('/', router);
