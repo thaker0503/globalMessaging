@@ -8,9 +8,7 @@
 </head>
 <body>
     <main class="main-chat-screen">
-        <span>
-            <b>UserName:</b><br>&nbsp;&nbsp;&nbsp;&nbsp;<span>user message</span>
-        </span>
+        <ul id="chats"></ul>
     </main>
     <section>
         <form id="chatForm">
@@ -22,10 +20,37 @@
     <script>
         const chatForm = document.getElementById('chatForm');
 
-        chatForm.addEventListener('submit', (e)=>{
-            e.preventDefault();
-            
-        })
+        chatForm.addEventListener('submit',e =>{
+            e.preventDefault(); 
+            submitForm(event)
+            })
+
+        function submitForm(){
+            // e.preventDefault();
+
+            const timeStamp = Date.now();
+            const chatInput = document.getElementById('chatInput');
+            const chatMsg = chatInput.value;
+
+            chatInput.value = "";
+
+            let chatObj = {
+                timeStamp,
+                chatMsg
+            }
+
+            document.getElementById('chats').scrollIntoView({behavior:"smooth",block:"end",inline:"nearest"});
+
+            fetch('/chats',{
+                method: "POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify(chatObj)
+            })
+            // .then(d => d.json()).then(r => console.log(r))
+
+        }
     </script>
 </body>
 </html>

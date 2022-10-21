@@ -69,7 +69,7 @@ router.post('/login', (req, res) => {
             compare(userDetails.password, snapshot.val().encPassword)
                 .then(result => {
                     if (result) {
-                        res.status(200).json({msg: snapshot.val()});
+                        res.render('chat.html');
                     } else {
                         res.status(204).json({msg: "Credentials don't match"})
                     }
@@ -92,8 +92,13 @@ function compare(plaintextPassword,hash) {
     return bcrypt.compare(plaintextPassword, hash)
 }
 
-router.post('/chat', (req, res) => {
-    
+router.post('/chats', (req, res) => {
+    console.log(req.body)
+    res.send(req.body)
+    // db.ref("messages/" + req.body.timestamp).set({
+    //     username: req.body.username,
+    //     message: req.body.chatMsg,
+    // });
 })
 
 app.use('/', router);

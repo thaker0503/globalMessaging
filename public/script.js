@@ -50,7 +50,10 @@ function sendUserDetails(user) {
             'Content-Type':'application/json'
         },
         body: JSON.stringify(user)
-    }).then(d => d.json()).then(r => console.log(r.msg.name))
+    }).then(d => d.json()).then(r => {
+        console.log(r.msg);
+    
+    })
 }
 
 
