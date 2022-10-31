@@ -1,6 +1,6 @@
 <main class="main-chat-screen">
     <ul id="chats">
-        <b><%= user %>:</b>
+        // chats are displayed here... 
     </ul>
 </main>
 <section>
@@ -10,12 +10,14 @@
     </form>
 </section>
 
-<script>
-    const chatForm = document.getElementById('chatForm');
+<script type="text/javascript">
+    document.getElementById('chats').scrollIntoView({ behavior: "smooth", block: "end", inline: "end" });
 
+    const currentUser =  `<%= user %>`  
+    const chatForm = document.getElementById('chatForm');
     chatForm.addEventListener('submit', e => {
         e.preventDefault();
-        submitForm(event)
+        submitForm()
     })
 
     function submitForm() {
@@ -29,11 +31,12 @@
 
         let chatObj = {
             timeStamp,
+            currentUser,
             chatMsg
         }
 
-        document.getElementById('chats').scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-
+        document.getElementById('chats').scrollIntoView({ behavior: "smooth", block: "end", inline: "end" });
+        
         fetch('/chats', {
             method: "POST",
             headers: {
@@ -41,7 +44,62 @@
             },
             body: JSON.stringify(chatObj)
         })
-        // .then(d => d.json()).then(r => console.log(r))
+        .then(d => d.json()).then(r => {
+            console.log(r)
+        }).then(() => {
+            getChats();
+            // scroll to the last chat message slowly
+            // const chats = document.getElementById('chats');
+            // console.log(chats.scrollHeight)
+            // chats.scrollTo(0, chats.scrollHeight);
+            // scrollToBottom();
+        })
 
     }
+    getChats()
+
+    function getChats(){
+        fetch('/chats')
+        .then(d => d.json()).then(r => {
+            // console.log(r);
+            const chats = document.getElementById('chats');
+            if(!r.msg){
+                chats.innerHTML = "";
+                const chatArray = Object.values(r);
+                chatArray.sort((a, b) => a.timeStamp - b.timeStamp);
+                // console.log(chatArray);
+                chatArray.forEach(chat => {
+                    const li = document.createElement('li');
+                    li.classList.add('chat');
+                    chat.user === currentUser ? li.classList.add('sent') : li.classList.add('received');
+                    li.innerHTML = `<b><span class="chat-user">${chat.user}</span></b>: <span class="chat-msg">${chat.chatMsg}</span>`;
+                    chats.appendChild(li);
+                });
+            }
+        })
+    }
+
+
+
+    let currentUserID = document.getElementById('currentUserID');
+        currentUserID.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            // remove menu if it already exists
+            if(document.getElementById('menu')){
+                document.getElementById('menu').remove();
+            }
+            let menu = document.createElement('span');
+            menu.classList.add('contextMenu');
+            menu.id = 'menu';
+            menu.style.position = 'absolute';
+            menu.style.top = e.clientY + 10 + 'px';
+            menu.style.left = e.clientX + 10 + 'px';
+            menu.innerHTML = `
+        <a href="/logout">Logout</a>
+        `;
+            document.body.appendChild(menu);
+            menu.addEventListener('click', () => {
+                menu.remove();
+            })
+        }) 
 </script>

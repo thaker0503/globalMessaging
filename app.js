@@ -50,6 +50,13 @@ router.get('/', (req, res) => {
 });
 
 
+router.get('/login', (req, res) => {
+    res.render('index',{page:'login.ejs',user:'Please Login'})
+});
+
+router.get('/logout',(req,res)=>{
+    res.render('index',{page:'login.ejs',user:'Please Login'})
+});
 
 router.post('/login', (req, res) => {
     let tmp = req.body.email.split('@')[0];
@@ -95,12 +102,33 @@ function compare(plaintextPassword,hash) {
 
 router.post('/chats', (req, res) => {
     console.log(req.body)
-    res.send(req.body)
-    set(child(ref(db), `messages/${req, body.timestamp}`)).then((snapshot) => {
-        console.log(snapshot)
-        res.send({msg:"Data posted..."})
+    // set(child(ref(db), 'messages/'+ req.body.timeStamp)).then((snapshot) => {
+    //     console.log(snapshot)
+    //     res.send({msg:"Data posted..."})
+    // });
+    set(ref(db, 'messages/' +  req.body.timeStamp), {
+        chatMsg: req.body.chatMsg,
+        user: req.body.currentUser,
+    })
+    res.send({ message: "Chat Success" });
+});
+
+
+router.get('/chats', (req, res) => {
+    get(child(ref(db), 'messages')).then((snapshot) => {
+        if (snapshot.exists()) {
+            console.log(snapshot.val());
+            res.send(snapshot.val());
+        } else {
+            console.log("No data avaialable");
+            res.send({msg: "No data avaialable"});
+        }
+    }).catch((error) => {
+        console.error(error);
     });
-})
+});
+
+
 
 app.use('/', router);
 

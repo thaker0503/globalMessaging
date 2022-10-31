@@ -1,8 +1,17 @@
 <nav class="navbar" style="background-color: rgb(250, 248, 248);box-shadow: 0px 5px 15px 2px rgba(0, 0, 0, 0.142);">
 <div class="container-fluid">
     <a class="navbar-brand"><h2>Technostacks</h2></a>
-    <span class="d-flex" role="loggerdInUser">
-         <h3><%= user %> </h3>
+    <span class="d-flex" role="loggedInUser">
+        <h3 id="currentUserID"><%= user %> </h3>
+        <% if (user != "Please Login") { %>
+            <div class="dropdown">
+                <i class="fa-solid fa-bars" data-bs-toggle="dropdown"></i>
+                <span class="dropdown-menu">
+                    <span><a class="dropdown-item" href="/logout">Logout</a></span>
+                </span>
+            </div>
+        <% } %>
     </span>
 </div>
 </nav>
+
