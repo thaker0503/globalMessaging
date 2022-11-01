@@ -72,11 +72,11 @@ router.post('/login', (req, res) => {
     // checkUser(userDetails.name)
     get(child(ref(db), `users/${userDetails.name}`)).then((snapshot) => {
         if (snapshot.exists()) {
-            console.log(snapshot.val().encPassword);
+            // console.log(snapshot.val().encPassword);
             compare(userDetails.password, snapshot.val().encPassword)
                 .then(result => {
                     if (result) {
-                        console.log('Rendering Page')
+                        // console.log('Rendering Page')
                         res.render('index',{page:'chat.ejs',user: snapshot.val().name});
                     } else {
                         res.status(204).json({msg: "Credentials don't match"})
