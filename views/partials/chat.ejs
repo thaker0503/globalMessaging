@@ -1,6 +1,5 @@
 <main class="main-chat-screen">
     <ul id="chats">
-        // chats are displayed here... 
     </ul>
 </main>
 <section>
@@ -59,6 +58,7 @@
     setInterval(() => {
         getChats()
     }, 1000);
+    getChats()
 
     function getChats(){
         fetch('/chats')
