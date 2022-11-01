@@ -2,11 +2,12 @@
 <div class="container-fluid">
     <a class="navbar-brand"><h2>Technostacks</h2></a>
     <span class="d-flex" role="loggedInUser">
-        <h3 id="currentUserID"><%= user %> </h3>
         <% if (user != "Please Login") { %>
             <div class="dropdown">
                 <i class="fa-solid fa-bars" data-bs-toggle="dropdown"></i>
                 <span class="dropdown-menu">
+                    <span><a class="dropdown-item">Logged in as</a></span>
+                    <span><a class="dropdown-item"><%= user %></a></span>
                     <span><a class="dropdown-item" href="/logout">Logout</a></span>
                 </span>
             </div>

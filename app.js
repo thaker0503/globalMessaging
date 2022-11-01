@@ -101,7 +101,7 @@ function compare(plaintextPassword,hash) {
 }
 
 router.post('/chats', (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     // set(child(ref(db), 'messages/'+ req.body.timeStamp)).then((snapshot) => {
     //     console.log(snapshot)
     //     res.send({msg:"Data posted..."})
@@ -117,7 +117,7 @@ router.post('/chats', (req, res) => {
 router.get('/chats', (req, res) => {
     get(child(ref(db), 'messages')).then((snapshot) => {
         if (snapshot.exists()) {
-            console.log(snapshot.val());
+            // console.log(snapshot.val());
             res.send(snapshot.val());
         } else {
             console.log("No data avaialable");
