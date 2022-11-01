@@ -56,7 +56,9 @@
         })
 
     }
-    getChats()
+    setInterval(() => {
+        getChats()
+    }, 1000);
 
     function getChats(){
         fetch('/chats')
